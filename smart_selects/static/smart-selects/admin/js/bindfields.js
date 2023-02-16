@@ -64,27 +64,37 @@
     $(document).on('formset:added', function (event, $row, formsetName) {
         // Fired every time a new inline formset is created
 
-        var chainedFK, chainedM2M, filteredM2M;
-
+        let chainedFK, chainedM2M, filteredM2M;
+        let row = getRow(event, $row, formsetName)
         // For the ForeingKey
-        chainedFK = $row.find(".chained-fk");
+        chainedFK = row.find(".chained-fk");
         $.each(chainedFK, function (index, chained) {
             initFormset(chained);
         });
 
         // For the ManyToMany
-        chainedM2M = $row.find(".chained");
+        chainedM2M = row.find(".chained");
         $.each(chainedM2M, function (index, chained) {
             initFormset(chained);
         });
 
         // For the ManyToMany using horizontal=True added after the page load
         // using javascript.
-        filteredM2M = $row.find(".filtered");
+        filteredM2M = row.find(".filtered");
         $.each(filteredM2M, function (index, filtered) {
             if (filtered.hasAttribute('data-chainfield')) {
                 initFormset(filtered);
             }
         });
     });
+
+    function getRow(event, $row, formsetName) {
+        if (event.detail && event.detail.formsetName) {
+            // Django >= 4.1
+            return $(event.target)
+        } else {
+            // Django < 4.1, use $row and formsetName
+            return $row
+        }
+    }
 }(jQuery || django.jQuery));
