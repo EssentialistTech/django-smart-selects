@@ -89,6 +89,7 @@
     });
 
     function getRow(event, $row, formsetName) {
+        // More info https://docs.djangoproject.com/en/4.1/ref/contrib/admin/javascript/
         if (event.detail && event.detail.formsetName) {
             // Django >= 4.1
             return $(event.target)
